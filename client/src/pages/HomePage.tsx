@@ -137,7 +137,7 @@ export function HomePage() {
                   artist={{
                     id: artist.id,
                     name: artist.name,
-                    cover_url: artist.urls ? artist.urls[0] : '/api/placeholder/300/300',
+                    urls: artist.urls,
                     followers: artist.followers,
                     popularity: artist.popularity,
                     genres: artist.genres ?? []
