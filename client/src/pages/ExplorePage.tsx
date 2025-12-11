@@ -462,7 +462,7 @@ export function ExplorePage() {
                                         label: function(context) {
                                           const label = context.label || '';
                                           const value = context.parsed || 0;
-                                          const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+                                          const total = context.dataset.data.reduce((a: number, b: any) => a + Number(b), 0);
                                           const percentage = ((value / total) * 100).toFixed(1);
                                           return `${label}: ${value} artists (${percentage}%)`;
                                         }
@@ -513,7 +513,7 @@ export function ExplorePage() {
                                         label: function(context) {
                                           const label = context.label || '';
                                           const value = context.parsed || 0;
-                                          const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+                                          const total = context.dataset.data.reduce((a: number, b: any) => a + Number(b), 0);
                                           const percentage = ((value / total) * 100).toFixed(1);
                                           return `${label}: ${value} tracks (${percentage}%)`;
                                         }
