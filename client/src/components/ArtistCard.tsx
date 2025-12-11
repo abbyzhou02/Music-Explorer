@@ -1,14 +1,6 @@
 import { Link } from 'react-router-dom';
+import { Artist } from '../lib/artistApi';
 // import { LikeButton } from './LikeButton';
-
-interface Artist {
-  id: string;
-  name: string;
-  popularity: number;
-  followers: number;
-  cover_url: string;
-  genres?: string[];
-}
 
 interface ArtistCardProps {
   artist: Artist;
@@ -20,7 +12,7 @@ export function ArtistCard({ artist }: ArtistCardProps) {
       <Link to={`/artist/${artist.id}`} className="block">
         <div className="aspect-square rounded-md overflow-hidden mb-3">
           <img
-            src={artist.cover_url}
+            src={artist.urls && artist.urls.length>0 ? artist.urls[0] : '/placeholder.jpg'}
             alt={artist.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-normal"
           />
