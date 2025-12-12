@@ -31,6 +31,7 @@ pids/
 
 # 覆盖率报告
 coverage/
+!coverage/index.html
 .nyc_output/
 lib-cov/
 

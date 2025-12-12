@@ -42,7 +42,7 @@ describe('Auth Middleware', () => {
         message: 'Missing access token',
         error: {
           code: 'MISSING_TOKEN',
-          details: 'Bearer token required in request header'
+          details: 'Bearer token must be provided in request header'
         }
       });
       expect(mockNext).not.toHaveBeenCalled();
@@ -79,10 +79,10 @@ describe('Auth Middleware', () => {
       expect(mockRes.status).toHaveBeenCalledWith(403);
       expect(mockRes.json).toHaveBeenCalledWith({
         success: false,
-        message: 'User not found',
+        message: 'User does not exist',
         error: {
           code: 'USER_NOT_FOUND',
-          details: 'User associated with token does not exist'
+          details: 'User corresponding to token does not exist'
         }
       });
       expect(mockNext).not.toHaveBeenCalled();
@@ -100,7 +100,7 @@ describe('Auth Middleware', () => {
       expect(mockRes.status).toHaveBeenCalledWith(403);
       expect(mockRes.json).toHaveBeenCalledWith({
         success: false,
-        message: 'User account is disabled',
+        message: 'User account has been disabled',
         error: {
           code: 'USER_INACTIVE',
           details: 'User account is in inactive state'
@@ -170,7 +170,7 @@ describe('Auth Middleware', () => {
       expect(mockRes.status).toHaveBeenCalledWith(401);
       expect(mockRes.json).toHaveBeenCalledWith({
         success: false,
-        message: 'Not authenticated',
+        message: 'Unauthenticated',
         error: {
           code: 'UNAUTHENTICATED',
           details: 'Authentication required to access this resource'
@@ -200,7 +200,7 @@ describe('Auth Middleware', () => {
       expect(mockRes.status).toHaveBeenCalledWith(401);
       expect(mockRes.json).toHaveBeenCalledWith({
         success: false,
-        message: 'Not authenticated',
+        message: 'Unauthenticated',
         error: {
           code: 'UNAUTHENTICATED',
           details: 'Authentication required to access this resource'
@@ -244,7 +244,7 @@ describe('Auth Middleware', () => {
         message: 'Insufficient permissions',
         error: {
           code: 'INSUFFICIENT_PERMISSIONS',
-          details: 'Can only access your own resources'
+          details: 'Can only access own resources'
         }
       });
       expect(mockNext).not.toHaveBeenCalled();

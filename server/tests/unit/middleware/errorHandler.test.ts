@@ -67,6 +67,8 @@ describe('Error Handler Middleware', () => {
 
   describe('errorHandler', () => {
     it('should handle generic error with default values', () => {
+      // Set to production to avoid stack trace in response
+      process.env.NODE_ENV = 'production';
       const error = new Error('Generic error');
       
       errorHandler(error, mockRequest as Request, mockResponse as Response, mockNext);
@@ -83,6 +85,7 @@ describe('Error Handler Middleware', () => {
     });
 
     it('should handle error with custom status code and message', () => {
+      process.env.NODE_ENV = 'production';
       const error = createError('Custom error', 404, 'NOT_FOUND');
       
       errorHandler(error, mockRequest as Request, mockResponse as Response, mockNext);
@@ -98,6 +101,7 @@ describe('Error Handler Middleware', () => {
     });
 
     it('should handle ValidationError', () => {
+      process.env.NODE_ENV = 'production';
       const error: AppError = new Error('Validation failed');
       error.name = 'ValidationError';
       error.details = { field: 'name' };
@@ -115,6 +119,7 @@ describe('Error Handler Middleware', () => {
     });
 
     it('should handle JsonWebTokenError', () => {
+      process.env.NODE_ENV = 'production';
       const error: AppError = new Error('Invalid token');
       error.name = 'JsonWebTokenError';
       
@@ -131,6 +136,7 @@ describe('Error Handler Middleware', () => {
     });
 
     it('should handle TokenExpiredError', () => {
+      process.env.NODE_ENV = 'production';
       const error: AppError = new Error('Token expired');
       error.name = 'TokenExpiredError';
       
@@ -147,6 +153,7 @@ describe('Error Handler Middleware', () => {
     });
 
     it('should handle NotFoundError', () => {
+      process.env.NODE_ENV = 'production';
       const error: AppError = new Error('Resource not found');
       error.name = 'NotFoundError';
       
@@ -163,6 +170,7 @@ describe('Error Handler Middleware', () => {
     });
 
     it('should handle SQLite constraint unique error', () => {
+      process.env.NODE_ENV = 'production';
       const error: AppError = new Error('Unique constraint failed');
       error.code = 'SQLITE_CONSTRAINT_UNIQUE';
       
@@ -179,6 +187,7 @@ describe('Error Handler Middleware', () => {
     });
 
     it('should handle PostgreSQL constraint error', () => {
+      process.env.NODE_ENV = 'production';
       const error: AppError = new Error('Constraint violation');
       error.code = '23505';
       
@@ -195,6 +204,7 @@ describe('Error Handler Middleware', () => {
     });
 
     it('should handle UnauthorizedError', () => {
+      process.env.NODE_ENV = 'production';
       const error: AppError = new Error('Unauthorized');
       error.name = 'UnauthorizedError';
       
@@ -245,6 +255,7 @@ describe('Error Handler Middleware', () => {
     });
 
     it('should use default error message when message is empty', () => {
+      process.env.NODE_ENV = 'production';
       const error = new Error();
       
       errorHandler(error, mockRequest as Request, mockResponse as Response, mockNext);

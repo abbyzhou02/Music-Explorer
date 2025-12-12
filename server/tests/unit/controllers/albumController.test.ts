@@ -54,7 +54,7 @@ describe('AlbumController', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith({
         success: false,
-        error: 'Album not found',
+        error: 'Album does not exist',
         timestamp: expect.any(String)
       });
     });
@@ -140,6 +140,129 @@ describe('AlbumController', () => {
         typeFilter: 'album'
       });
       expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  });
+
+  describe('getRecentAlbums', () => {
+    it('should return recent albums', async () => {
+      const mockAlbums = [
+        { id: '1', name: 'Recent Album 1', release_date: '2024-01-01' },
+        { id: '2', name: 'Recent Album 2', release_date: '2024-02-01' }
+      ];
+
+      mockRequest.query = { limit: '5' };
+      mockAlbumService.getAlbums.mockResolvedValue(mockAlbums as any);
+
+      await AlbumController.getRecentAlbums(mockRequest as Request, mockResponse as Response);
+
+      expect(mockAlbumService.getAlbums).toHaveBeenCalledWith({
+        sortBy: 'release_date',
+        sortOrder: 'DESC',
+        limit: 5
+      });
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+
+    it('should use default limit when not provided', async () => {
+      mockRequest.query = {};
+      mockAlbumService.getAlbums.mockResolvedValue([]);
+
+      await AlbumController.getRecentAlbums(mockRequest as Request, mockResponse as Response);
+
+      expect(mockAlbumService.getAlbums).toHaveBeenCalledWith({
+        sortBy: 'release_date',
+        sortOrder: 'DESC',
+        limit: 10
+      });
+    });
+
+    it('should handle service errors', async () => {
+      mockRequest.query = {};
+      mockAlbumService.getAlbums.mockRejectedValue(new Error('Database error'));
+
+      await AlbumController.getRecentAlbums(mockRequest as Request, mockResponse as Response);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+    });
+  });
+
+  describe('getAlbumCountByArtist', () => {
+    it('should return album count by artist', async () => {
+      const mockCount = 15;
+      
+      mockRequest.params = { id: 'artist123' };
+      mockAlbumService.getAlbumCount.mockResolvedValue(mockCount);
+
+      await AlbumController.getAlbumCountByArtist(mockRequest as Request, mockResponse as Response);
+
+      expect(mockAlbumService.getAlbumCount).toHaveBeenCalledWith({
+        artistIds: ['artist123']
+      });
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
+        data: mockCount,
+        timestamp: expect.any(String)
+      });
+    });
+
+    it('should handle service errors', async () => {
+      mockRequest.params = { id: 'artist123' };
+      mockAlbumService.getAlbumCount.mockRejectedValue(new Error('Database error'));
+
+      await AlbumController.getAlbumCountByArtist(mockRequest as Request, mockResponse as Response);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+    });
+  });
+
+  describe('getTypeDistributionFromSearch', () => {
+    it('should return type distribution', async () => {
+      const mockDistribution = [
+        { type: 'album', count: 50, ratio: 0.5 },
+        { type: 'single', count: 30, ratio: 0.3 },
+        { type: 'compilation', count: 20, ratio: 0.2 }
+      ];
+
+      mockRequest.query = {
+        searchTerm: 'rock',
+        typeFilter: 'all'
+      };
+      mockAlbumService.getTypeDistributionFromSearch.mockResolvedValue(mockDistribution as any);
+
+      await AlbumController.getTypeDistributionFromSearch(mockRequest as Request, mockResponse as Response);
+
+      expect(mockAlbumService.getTypeDistributionFromSearch).toHaveBeenCalledWith({
+        searchTerm: 'rock',
+        typeFilter: 'all'
+      });
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
+        data: mockDistribution,
+        timestamp: expect.any(String)
+      });
+    });
+
+    it('should use default values for empty query', async () => {
+      mockRequest.query = {};
+      mockAlbumService.getTypeDistributionFromSearch.mockResolvedValue([]);
+
+      await AlbumController.getTypeDistributionFromSearch(mockRequest as Request, mockResponse as Response);
+
+      expect(mockAlbumService.getTypeDistributionFromSearch).toHaveBeenCalledWith({
+        searchTerm: '',
+        typeFilter: 'all'
+      });
+    });
+
+    it('should handle service errors', async () => {
+      mockRequest.query = {};
+      mockAlbumService.getTypeDistributionFromSearch.mockRejectedValue(new Error('Query error'));
+
+      await AlbumController.getTypeDistributionFromSearch(mockRequest as Request, mockResponse as Response);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
     });
   });
 });

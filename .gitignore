@@ -32,6 +32,7 @@ lerna-debug.log*
 
 # 测试覆盖率
 coverage/
+!coverage/index.html
 .nyc_output/
 *.lcov
 

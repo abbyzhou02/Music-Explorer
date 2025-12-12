@@ -166,4 +166,109 @@ describe('TrackController', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
   });
+
+  describe('getTrackCountByArtist', () => {
+    it('should return track count by artist', async () => {
+      const mockCount = 25;
+      
+      mockRequest.params = { id: 'artist123' };
+      mockTrackService.getTrackCount.mockResolvedValue(mockCount);
+
+      await TrackController.getTrackCountByArtist(mockRequest as Request, mockResponse as Response);
+
+      expect(mockTrackService.getTrackCount).toHaveBeenCalledWith({
+        artistIds: ['artist123']
+      });
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
+        data: mockCount,
+        timestamp: expect.any(String)
+      });
+    });
+
+    it('should handle service errors', async () => {
+      mockRequest.params = { id: 'artist123' };
+      mockTrackService.getTrackCount.mockRejectedValue(new Error('Database error'));
+
+      await TrackController.getTrackCountByArtist(mockRequest as Request, mockResponse as Response);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+    });
+  });
+
+  describe('getTracksByAlbum', () => {
+    it('should return tracks by album', async () => {
+      const mockTracks = [
+        { id: '1', name: 'Album Track 1', album_id: 'album123' },
+        { id: '2', name: 'Album Track 2', album_id: 'album123' }
+      ];
+      
+      mockRequest.params = { id: 'album123' };
+      mockRequest.query = { limit: '10', offset: '0' };
+      mockTrackService.getTracksByAlbum.mockResolvedValue(mockTracks as any);
+
+      await TrackController.getTracksByAlbum(mockRequest as Request, mockResponse as Response);
+
+      expect(mockTrackService.getTracksByAlbum).toHaveBeenCalledWith('album123');
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
+        data: mockTracks,
+        timestamp: expect.any(String)
+      });
+    });
+
+    it('should handle service errors', async () => {
+      mockRequest.params = { id: 'album123' };
+      mockRequest.query = {};
+      mockTrackService.getTracksByAlbum.mockRejectedValue(new Error('Query failed'));
+
+      await TrackController.getTracksByAlbum(mockRequest as Request, mockResponse as Response);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+    });
+  });
+
+  describe('getLyricsByTrackId', () => {
+    it('should return lyrics when found', async () => {
+      const mockLyrics = 'These are the lyrics of the song...';
+      
+      mockRequest.params = { id: 'track123' };
+      mockTrackService.getLyricsByTrackId.mockResolvedValue(mockLyrics);
+
+      await TrackController.getLyricsByTrackId(mockRequest as Request, mockResponse as Response);
+
+      expect(mockTrackService.getLyricsByTrackId).toHaveBeenCalledWith('track123');
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
+        data: mockLyrics,
+        timestamp: expect.any(String)
+      });
+    });
+
+    it('should handle when lyrics not found', async () => {
+      mockRequest.params = { id: 'track456' };
+      mockTrackService.getLyricsByTrackId.mockResolvedValue(null);
+
+      await TrackController.getLyricsByTrackId(mockRequest as Request, mockResponse as Response);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
+        data: null,
+        timestamp: expect.any(String)
+      });
+    });
+
+    it('should handle service errors', async () => {
+      mockRequest.params = { id: 'track789' };
+      mockTrackService.getLyricsByTrackId.mockRejectedValue(new Error('Database error'));
+
+      await TrackController.getLyricsByTrackId(mockRequest as Request, mockResponse as Response);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+    });
+  });
 });
