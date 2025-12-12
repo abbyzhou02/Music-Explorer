@@ -1,46 +1,46 @@
 # ===========================================
-# MusicVista 前端 Dockerfile
-# 多阶段构建：Node.js 构建 + Nginx 服务
+# MusicVista Frontend Dockerfile
+# Multi-stage build: Node.js build + Nginx serve
 # ===========================================
 
-# 阶段 1: 构建阶段
+# Stage 1: Build stage
 FROM node:18-alpine AS builder
 
-# 设置工作目录
+# Set working directory
 WORKDIR /app
 
-# 复制 package 文件
+# Copy package files
 COPY package*.json ./
 
-# 安装依赖（包括 devDependencies，需要构建）
+# Install dependencies (including devDependencies for build)
 RUN npm ci
 
-# 复制源代码和配置文件
+# Copy source code and configuration files
 COPY . .
 
-# 构建参数（可在构建时传入）
+# Build arguments (can be passed at build time)
 ARG VITE_API_BASE_URL=/api
 ARG VITE_APP_NAME=MusicVista
 ARG VITE_APP_VERSION=1.0.0
 
-# 设置环境变量用于构建
+# Set environment variables for build
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 ENV VITE_APP_NAME=$VITE_APP_NAME
 ENV VITE_APP_VERSION=$VITE_APP_VERSION
 
-# 执行生产构建
+# Execute production build
 RUN npm run build
 
-# 阶段 2: 生产运行阶段
+# Stage 2: Production runtime stage
 FROM nginx:alpine
 
-# 安装 curl 用于健康检查
+# Install curl for health check
 RUN apk add --no-cache curl
 
-# 复制构建产物到 Nginx
+# Copy build artifacts to Nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# 创建 Nginx 配置
+# Create Nginx configuration
 RUN cat > /etc/nginx/conf.d/default.conf <<'EOF'
 server {
     listen 80;
@@ -48,7 +48,7 @@ server {
     root /usr/share/nginx/html;
     index index.html;
 
-    # Gzip 压缩
+    # Gzip compression
     gzip on;
     gzip_vary on;
     gzip_min_length 1024;
@@ -56,18 +56,18 @@ server {
                application/x-javascript application/xml+rss 
                application/javascript application/json;
 
-    # 安全头
+    # Security headers
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-XSS-Protection "1; mode=block" always;
 
-    # 静态资源缓存
+    # Static resource caching
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
 
-    # API 代理（如果前后端同域部署）
+    # API proxy (if frontend and backend deployed on same domain)
     location /api {
         proxy_pass http://server:3001;
         proxy_http_version 1.1;
@@ -80,31 +80,31 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    # 健康检查端点
+    # Health check endpoint
     location /health {
         access_log off;
         return 200 "OK\n";
         add_header Content-Type text/plain;
     }
 
-    # SPA 路由处理
+    # SPA routing handling
     location / {
         try_files $uri $uri/ /index.html;
     }
 
-    # 禁止访问隐藏文件
+    # Deny access to hidden files
     location ~ /\. {
         deny all;
     }
 }
 EOF
 
-# 健康检查
+# Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost/health || exit 1
 
-# 暴露端口
+# Expose port
 EXPOSE 80
 
-# 启动 Nginx
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

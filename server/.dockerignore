@@ -1,22 +1,22 @@
 # ==========================================
-# Docker 构建忽略文件
-# 用于减小 Docker 镜像体积
+# Docker Build Ignore File
+# Used to reduce Docker image size
 # ==========================================
 
-# Node modules（会在容器内重新安装）
+# Node modules (will be reinstalled in container)
 node_modules
 npm-debug.log
 yarn-error.log
 pnpm-debug.log
 
-# 环境变量（开发和测试）
+# Environment variables (development and test)
 .env
 .env.local
 .env.development
 .env.test
-# 注意：.env.production 需要在运行时注入，不打包进镜像
+# Note: .env.production should be injected at runtime, not packaged in image
 
-# 测试文件（生产环境不需要）
+# Test files (not needed in production)
 tests/
 __tests__/
 *.test.ts
@@ -28,7 +28,7 @@ coverage/
 jest.config.js
 jest.config.ts
 
-# 开发工具配置
+# Development tool configuration
 .git
 .gitignore
 .gitattributes
@@ -39,39 +39,39 @@ jest.config.ts
 .eslintignore
 tsconfig.test.json
 
-# 编辑器配置
+# Editor configuration
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# 文档（可选，看需求）
+# Documentation (optional, depending on needs)
 README.md
 CHANGELOG.md
 CONTRIBUTING.md
 LICENSE.md
 docs/
 
-# 临时和日志文件
+# Temporary and log files
 dist/
 *.log
 *.tmp
 *.temp
 logs/
 
-# 操作系统文件
+# OS files
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# CI/CD 配置
+# CI/CD configuration
 .github/
 .gitlab-ci.yml
 .travis.yml
 .circleci/
 
-# 其他
+# Other
 *.bak
 *.backup
 .env.example

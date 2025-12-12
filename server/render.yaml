@@ -1,37 +1,37 @@
 # ===========================================
-# Render 部署配置
-# 文档: https://render.com/docs/yaml-spec
+# Render Deployment Configuration
+# Documentation: https://render.com/docs/yaml-spec
 # ===========================================
 
 services:
   - type: web
     name: musicvista-api
     runtime: node
-    region: oregon              # 区域: oregon (US West), frankfurt (EU), singapore (Asia)
-    plan: free                  # 免费套餐
+    region: oregon              # Region: oregon (US West), frankfurt (EU), singapore (Asia)
+    plan: free                  # Free tier
     
-    # 构建配置（不需要 rootDir，因为 yaml 就在 server 目录）
+    # Build configuration (no rootDir needed since yaml is in server directory)
     buildCommand: npm ci && npm run build
     startCommand: npm start
     
-    # 健康检查
+    # Health check
     healthCheckPath: /health
     
-    # 自动部署（Git push 自动触发）
+    # Auto deploy (triggered by Git push)
     autoDeploy: true
     
-    # 环境变量
+    # Environment variables
     envVars:
-      # Node 环境
+      # Node environment
       - key: NODE_ENV
         value: production
       
       - key: PORT
         value: 3001
       
-      # 数据库配置（在 Dashboard 手动添加实际值）
+      # Database configuration (add actual values manually in Dashboard)
       - key: DB_HOST
-        sync: false             # 需要在 Dashboard 手动配置
+        sync: false             # Needs to be configured manually in Dashboard
       
       - key: DB_PORT
         value: 5432
@@ -45,9 +45,9 @@ services:
       - key: DB_PASSWORD
         sync: false
       
-      # JWT 配置（Render 自动生成安全密钥）
+      # JWT configuration (Render auto-generates secure keys)
       - key: JWT_ACCESS_SECRET
-        generateValue: true     # Render 自动生成随机值
+        generateValue: true     # Render auto-generates random value
       
       - key: JWT_REFRESH_SECRET
         generateValue: true
@@ -58,70 +58,70 @@ services:
       - key: JWT_REFRESH_EXPIRATION
         value: 7d
       
-      # CORS 配置（部署前端后更新）
+      # CORS configuration (update after frontend deployment)
       - key: FRONTEND_URL
         value: https://musicvista.vercel.app
       
       - key: CORS_ORIGINS
         value: https://musicvista.vercel.app,http://localhost:5173
       
-      # 日志级别
+      # Log level
       - key: LOG_LEVEL
         value: info
 
 # ===========================================
-# 📋 部署步骤：
+# 📋 Deployment Steps:
 #
-# 1. 提交此文件到 Git:
+# 1. Commit this file to Git:
 #    git add server/render.yaml
 #    git commit -m "feat: add Render deployment config"
 #    git push
 #
-# 2. 访问 Render Dashboard:
+# 2. Visit Render Dashboard:
 #    https://dashboard.render.com
 #
-# 3. 部署方式选择其一:
+# 3. Choose one deployment method:
 #
-#    方式 A - Blueprint (推荐):
+#    Method A - Blueprint (Recommended):
 #    - New → Blueprint
-#    - 连接 GitHub 仓库
-#    - Render 自动识别 render.yaml
-#    - 在 Dashboard 添加敏感环境变量 (DB_HOST, DB_PASSWORD 等)
-#    - 点击 Apply 开始部署
+#    - Connect GitHub repository
+#    - Render auto-detects render.yaml
+#    - Add sensitive environment variables in Dashboard (DB_HOST, DB_PASSWORD, etc.)
+#    - Click Apply to start deployment
 #
-#    方式 B - 手动创建:
+#    Method B - Manual creation:
 #    - New → Web Service
-#    - 连接 GitHub 仓库
+#    - Connect GitHub repository
 #    - Root Directory: try/clean/server
-#    - 其他配置 Render 会从 yaml 读取
-#    - 添加敏感环境变量
+#    - Other configurations will be read from yaml by Render
+#    - Add sensitive environment variables
 #    - Create Web Service
 #
-# 4. 部署完成后:
-#    - 获取 URL: https://musicvista-api.onrender.com
-#    - 测试健康检查: https://musicvista-api.onrender.com/health
-#    - 更新前端环境变量: VITE_API_BASE_URL
+# 4. After deployment:
+#    - Get URL: https://musicvista-api.onrender.com
+#    - Test health check: https://musicvista-api.onrender.com/health
+#    - Update frontend environment variable: VITE_API_BASE_URL
 #
 # ===========================================
 
 # ===========================================
-# ⚠️ 重要提示：
+# ⚠️ Important Notes:
 #
-# 1. 敏感环境变量需要在 Render Dashboard 手动添加：
-#    - DB_HOST (AWS RDS 地址)
+# 1. Sensitive environment variables need to be added manually in Render Dashboard:
+#    - DB_HOST (AWS RDS address)
 #    - DB_NAME (millionsongsubset)
 #    - DB_USER (postgres)
-#    - DB_PASSWORD (你的实际密码)
+#    - DB_PASSWORD (your actual password)
 #
-# 2. JWT 密钥会自动生成，无需手动配置
+# 2. JWT secrets will be auto-generated, no manual configuration needed
 #
-# 3. 免费套餐限制：
-#    - 15 分钟无请求会休眠
-#    - 冷启动需要 30-60 秒
-#    - 每月 750 小时运行时间
+# 3. Free tier limitations:
+#    - Service sleeps after 15 minutes of inactivity
+#    - Cold start takes 30-60 seconds
+#    - 750 hours per month runtime
 #
-# 4. 解决休眠问题：
-#    - 使用 cron-job.org 定时 ping
-#    - 或升级到付费套餐 ($7/月)
+# 4. Solutions for sleep issue:
+#    - Use cron-job.org for scheduled pings
+#    - Or upgrade to paid plan ($7/month)
 #
 # ===========================================
