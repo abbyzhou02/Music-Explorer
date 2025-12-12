@@ -85,6 +85,8 @@ ecosystem.config.js.backup
 # Docker related (optional)
 # docker-compose.override.yml
 
+DEPlOYMENT.md
+
 # Upload files (production)
 uploads/
 public/uploads/
@@ -110,5 +112,3 @@ public/uploads/
 .vuepress/dist
 .serverless/
 .fusebox/
-
-DEPlOYMENT.md
