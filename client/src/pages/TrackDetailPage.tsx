@@ -18,7 +18,7 @@ export function TrackDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<'lyrics' | 'analysis'>('lyrics');
-  console.log('Track Detail Page - Track:', track);
+  // console.log('Track Detail Page - Track:', track);
   useEffect(() => {
     if (!id) return;
 
@@ -58,7 +58,7 @@ export function TrackDetailPage() {
           const similarTracksResponse = await getSimilarTracks(id, 3);
           if (similarTracksResponse.success && similarTracksResponse.data) {
             setSimilarTracks(similarTracksResponse.data);
-            console.log('Similar Tracks:', similarTracksResponse.data);
+            // console.log('Similar Tracks:', similarTracksResponse.data);
           }
         } else {
           setError('Track does not exist');

@@ -156,7 +156,7 @@ export function ArtistDetailPage() {
     track_num: parseInt(item.track_num, 10) || 0,
     ratio: parseFloat(item.ratio) || 0
   }));
-  console.log(genreData, emotionData);
+  // console.log(genreData, emotionData);
   
     // console.log(albums, collaborators)
   return (

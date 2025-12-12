@@ -186,7 +186,7 @@ export function InsightsPage() {
         getArtistEmotionVariety()
       ]);
       
-      console.log(loveRes, popWordsRes, growthRes, varietyRes);
+      // console.log(loveRes, popWordsRes, growthRes, varietyRes);
       
       if (loveRes.success && loveRes.data) {
         // Convert string values to numbers
@@ -366,7 +366,7 @@ export function InsightsPage() {
                   },
                   getWordTooltip: (word: any) => `${word.text}: ${word.value}`,
                   onWordClick: (word: any) => {
-                    console.log(`Clicked: ${word.text}`);
+                    // console.log(`Clicked: ${word.text}`);
                   }
                 }}
               />
@@ -531,7 +531,7 @@ export function InsightsPage() {
                   },
                   getWordTooltip: (word: any) => `${word.text}: ${word.value}`,
                   onWordClick: (word: any) => {
-                    console.log(`Clicked: ${word.text}`);
+                    // console.log(`Clicked: ${word.text}`);
                   }
                 }}
               />

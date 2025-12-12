@@ -33,11 +33,11 @@ export function HomePage() {
         // const artistsData = await musicAnalyticsApiService.getTrendingArtists(8);
         const artistsData = await getTrendingArtists(8);
         setTrendingArtists(artistsData.data);
-        console.log('Trending Artists:', artistsData);
+        // console.log('Trending Artists:', artistsData);
         
         const albumsData = await getRecentAlbums(6);
         setRecentAlbums(albumsData.data);
-        console.log('Recent Albums:', albumsData);  
+        // console.log('Recent Albums:', albumsData);  
         
         setStats({
           totalArtists: await getArtistCount({}).then(res => res.data || 0),

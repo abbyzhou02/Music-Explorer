@@ -158,14 +158,14 @@ export function ExplorePage() {
           typeFilter: selectedAlbumType as 'single' | 'album' | 'compilation',
         });
         setTotalItems(countRes.data || 0);
-        console.log('Album count:', countRes.data);
+        // console.log('Album count:', countRes.data);
       } else {
         const countRes = await getTrackCount({
           searchTerm: searchQuery,
           emotionFilter: selectedEmotion as 'Frantic' | 'Tense' | 'Euphoric' | 'Upset' | 'Calm' | 'Cheerful' | 'Bleak' | 'Apathetic' | 'Serene' | 'All' | 'Other',
         });
         setTotalItems(countRes.data || 0);
-        console.log('Track count:', countRes.data);
+        // console.log('Track count:', countRes.data);
       }
     } catch (err: any) {
       console.error('Error loading count:', err);
