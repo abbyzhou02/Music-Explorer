@@ -5,6 +5,7 @@ export interface Track {
   id: string;
   name: string;
   artist_ids: string[];
+  album_id?: string;
   album_name: string;
   // popularity: number;
   duration_ms?: number;
@@ -162,7 +163,18 @@ export function TrackList({
                         {track.name}
                       </Link>
                     </td>
-                    <td className="py-3 px-4 text-body text-neutral-700">{track.album_name}</td>
+                    <td className="py-3 px-4">
+                      {track.album_id ? (
+                        <Link
+                          to={`/album/${track.album_id}`}
+                          className="text-body text-neutral-700 hover:text-primary-500"
+                        >
+                          {track.album_name}
+                        </Link>
+                      ) : (
+                        <span className="text-body text-neutral-700">{track.album_name}</span>
+                      )}
+                    </td>
                     <td className="py-3 px-4 text-right text-body text-neutral-900 font-semibold">
                       {/* {track.popularity} */}
                     </td>
